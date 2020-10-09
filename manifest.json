@@ -19,8 +19,8 @@
   "permissions": [
     "storage",
     "tabs",
-    "contextMenus",
-    "activeTab"
+    "activeTab",
+    "notifications"
   ]
 
 }

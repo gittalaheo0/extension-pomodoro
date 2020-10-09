@@ -5,7 +5,7 @@ var setTimeRest = null;
 // app counting function
 //start pomodoro
 function startCount(time){
-	chrome.storage.local.get(["timePomodoro","timeRest"], function(store){
+	chrome.storage.local.get(["timePomodoro"], function(store){
 		let timePomo = parseFloat(store.timePomodoro)*60000; // get time to count
 		// start count
 		setTimePomodoro	= setTimeout(function(){
@@ -18,13 +18,16 @@ function startCount(time){
 }
 //start rest
 function startRest(time){
-	chrome.storage.local.get(["timePomodoro","timeRest"], function(store){
-		let timePomo = parseFloat(store.timePomodoro)*60000; // get time to count
+	chrome.storage.local.get(["timeRest"], function(store){
+		let timeRest = parseFloat(store.timeRest)*60000; // get time to count
 		// start count
 		setTimePomodoro	= setTimeout(function(){
-			// do when done pomodoro
-			console.log("done: " + timePomo);
-		}, timePomo)
+			// open pomodoro tab/notification when done rest
+			chrome.storage.local.get(["openNewTabWhenEndRest", "openNotifiWhenEndRest"], function(store){
+				openNotificationAndNewtab(false, store.openNewTabWhenEndRest, store.openNotifiWhenEndRest)
+			})
+			
+		}, timeRest)
 	})
 }
 
@@ -35,26 +38,59 @@ function openNotificationAndNewtab(donePomo, enableNewTab, enableNotifi){
 			//open new tab
 			let optionsUrl = chrome.extension.getURL('option-page/tabopen/newtab.html');
 			chrome.tabs.query({url: optionsUrl}, function(tabs) {
-				console.log(tabs.length);
-	    		if (tabs.length) {
-	        		chrome.tabs.update(tabs[0].id, {active: true});
-	    		} else {
+				console.log("sdhjsdha")
 	        		chrome.tabs.create({url: optionsUrl});
-	 			}
 			});
 		}
 		if(enableNotifi=="true"){
 			let notifi = {
-				title: 'Just wanted to notify you',
-				message: 'How great it is!',
+				title: 'Done',
+				message: 'You have done a pomodoro!!!',
 				iconUrl: 'option-page/icon.png',
-				type: 'basic'
+				type: 'basic',
+				buttons: [
+					{
+					  "title": "Start Rest"
+					}
+				]
 			}
 			chrome.notifications.create('sdsdsd', notifi);
-			
+			// handle event when click the button
+			chrome.notifications.onButtonClicked.addListener((id, index) => {
+				chrome.notifications.clear(id);
+				// start rest
+				startRest()
+			});
 		};
 	}else{  // if rest done
-		
+		if(enableNewTab=="true"){
+			//open new tab
+			let optionsUrl = chrome.extension.getURL('option-page/tabopen/newtab.html');
+			chrome.tabs.query({url: optionsUrl}, function(tabs) {
+				console.log("sdhjsdha")
+	        		chrome.tabs.create({url: optionsUrl});
+			});
+		}
+		if(enableNotifi=="true"){
+			let notifi = {
+				title: 'Done',
+				message: 'It is time to start a pomodoro !!!',
+				iconUrl: 'option-page/icon.png',
+				type: 'basic',
+				buttons: [
+					{
+					  "title": "Start a pomodoro"
+					}
+				]
+			}
+			chrome.notifications.create('sdsdsd', notifi);
+			// handle event when click the button
+			chrome.notifications.onButtonClicked.addListener((id, index) => {
+				chrome.notifications.clear(id);
+				// start count
+				startCount()
+			});
+		};
 	}
 }
 

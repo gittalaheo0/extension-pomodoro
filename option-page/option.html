@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<h1>Pomodoro Setting</h1>
+	<div class="app">
+		<form>
+			<label for="maintime">Pomodoro on</label>
+			<input type="number" id="pomodoro_time">
+			<p>minute</p>
+		</form>
+		<form>
+			<label for="resttime">Rest on</label>
+			<input type="number" id="rest_time">
+			<p>minute</p>
+		</form>
+		<form>
+			<input type="checkbox" id="openNewTabWhenEndPomo">
+			<p>Open new tab when finish a pomodoro</p>
+		</form>
+		<form>
+			<input type="checkbox" id="openNotifiWhenEndPomo">
+			<p>Open notifycation when finish a pomodoro</p>
+		</form>
+		<form>
+			<input type="checkbox" id="openNewTabWhenEndRest">
+			<p>Open new tab when finish resting</p>
+		</form>
+		<form>
+			<input type="checkbox" id="openNotifiWhenEndRest">
+			<p>Open notification when finish resting</p>
+		</form>
+		<div class="save">Save</div>
+	</div>
+<script src="setting.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "POMODORO",
+  "description": "My First Chrome Extension",
+  "version": "1.0",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_popup": "popup-page/popup.html",
+    "default_title": "Pomodoro"
+  },
+  "options_page": "option-page/option.html",
+  "background": {
+    "scripts" : ["background.js"],
+    "persistent": false
+  },
+  "background": {
+    "scripts" : ["background.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "contextMenus",
+    "activeTab"
+  ]
+
+}

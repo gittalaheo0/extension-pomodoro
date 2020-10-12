@@ -14,8 +14,8 @@ chrome.storage.local.get(
 	 function(store){
 		// handle the time
 		if(store.timePomodoro && store.timeRest){
-			pomodoroTimeSetting.value = parseInt(store.timePomodoro)
-			restTimeSetting.value = parseInt(store.timeRest)
+			pomodoroTimeSetting.value = parseFloat(store.timePomodoro)
+			restTimeSetting.value = parseFloat(store.timeRest)
 		}else{ // if this is the fist time use app, set default time is 25 and 5
 			// update storage
 			chrome.storage.local.set({"timePomodoro": 25})

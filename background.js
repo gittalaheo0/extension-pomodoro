@@ -4,7 +4,7 @@ var setTimeRest = null;
 
 // app counting function
 //start pomodoro
-function startCount(time){
+function startCount(){
 	chrome.storage.local.get(["timePomodoro"], function(store){
 		let timePomo = parseFloat(store.timePomodoro)*60000; // get time to count
 		// start count
@@ -17,7 +17,7 @@ function startCount(time){
 	})
 }
 //start rest
-function startRest(time){
+function startRest(){
 	chrome.storage.local.get(["timeRest"], function(store){
 		let timeRest = parseFloat(store.timeRest)*60000; // get time to count
 		// start count
@@ -36,17 +36,18 @@ function openNotificationAndNewtab(donePomo, enableNewTab, enableNotifi){
 	if(donePomo){  // if pomodoro done
 		if(enableNewTab=="true"){
 			//open new tab
-			let optionsUrl = chrome.extension.getURL('option-page/tabopen/newtab.html');
+			let optionsUrl = chrome.extension.getURL('newtab.html');
 			chrome.tabs.query({url: optionsUrl}, function(tabs) {
-				console.log("sdhjsdha")
+				if(!tabs.length){
 	        		chrome.tabs.create({url: optionsUrl});
+				}
 			});
 		}
 		if(enableNotifi=="true"){
 			let notifi = {
 				title: 'Done',
 				message: 'You have done a pomodoro!!!',
-				iconUrl: 'option-page/icon.png',
+				iconUrl: 'tomato.png',
 				type: 'basic',
 				buttons: [
 					{
@@ -65,17 +66,18 @@ function openNotificationAndNewtab(donePomo, enableNewTab, enableNotifi){
 	}else{  // if rest done
 		if(enableNewTab=="true"){
 			//open new tab
-			let optionsUrl = chrome.extension.getURL('option-page/tabopen/newtab.html');
+			let optionsUrl = chrome.extension.getURL('newtab.html');
 			chrome.tabs.query({url: optionsUrl}, function(tabs) {
-				console.log("sdhjsdha")
+				if(!tabs.length){
 	        		chrome.tabs.create({url: optionsUrl});
+				}
 			});
 		}
 		if(enableNotifi=="true"){
 			let notifi = {
 				title: 'Done',
 				message: 'It is time to start a pomodoro !!!',
-				iconUrl: 'option-page/icon.png',
+				iconUrl: 'tomato.png',
 				type: 'basic',
 				buttons: [
 					{
@@ -90,22 +92,13 @@ function openNotificationAndNewtab(donePomo, enableNewTab, enableNotifi){
 				// start count
 				startCount()
 			});
-		};
-	}
+		}
+	}	
 }
 
-
-
-
 chrome.runtime.onMessage.addListener(function(req, sender, res) {
-
 	// start counting pomodoro
 	if(req.do == "start counting"){
 		startCount()
 	}
-
-	// start counting pomodoro
-	// if(req.do == "start counting"){
-	// 	startCount()
-	// }
 })

@@ -1,6 +1,6 @@
 // option variable
 var openSetting = document.querySelector(".app_ctrl_setting");
-var timeCounTing = document.querySelector(".app_countdown_pom")
+var timeHtml = document.querySelector(".app_countdown_pom")
 var activeTimeCounTing = document.querySelector("#active")
 
 // get information from store
@@ -9,7 +9,7 @@ chrome.storage.local.get(
 	function(store){
 		//handle the time
 		if(store.timePomodoro && store.timeRest){
-			timeCounTing.innerText = store.timePomodoro + "mins"
+			timeHtml.innerText = store.timePomodoro + "mins"
 		}else{
 			chrome.storage.local.set({"timePomodoro": 25})
 			chrome.storage.local.set({"timeRest": 5})
@@ -40,10 +40,29 @@ openSetting.onclick = function() {
 	});
 }
 
-// chrome.commands.onCommand.addListener(function(command) {
-//     console.log('Command:', command);
-// });
 // start counting
 activeTimeCounTing.onclick = function () {
+	// send message for background 
 	chrome.runtime.sendMessage({do: "start counting"});
+
+	// start counting in pop up html
+	setTimePopup(true)
+}
+
+// change DOM in html popup
+function setTimePopup(isPomodoroCounting){
+	let showTimeCounting = null;
+	chrome.storage.local.get(["timePomodoro","timeRest"],function(store){
+		// get the time according to process
+		let timeCounter = isPomodoroCounting ? store.timePomodoro : store.timeRest;
+		timeCounter = parseFloat(timeCounter)*60000;
+		let timeCounterCurren = 0;
+		// if pomodoro is counting or rest is counting >> change bacground
+		timeHtml.style.background = isPomodoroCounting ? "darkred" : "green"
+		// change time use DOM
+		showTimeCounting = setInterval(function(){
+			timeCounterCurren+=1000
+			timeHtml.innerText = timeCounterCurren + "sec"
+		}, 1000)
+	})
 }

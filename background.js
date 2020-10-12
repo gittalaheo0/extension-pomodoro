@@ -1,6 +1,7 @@
 // app
 var setTimePomodoro = null;
 var setTimeRest = null;
+var currenSecondCouting = null;
 
 // app counting function
 //start pomodoro
@@ -13,7 +14,14 @@ function startCount(){
 			chrome.storage.local.get(["openNewTabWhenEndPomo", "openNotifiWhenEndPomo"], function(store){
 				openNotificationAndNewtab(true, store.openNewTabWhenEndPomo, store.openNotifiWhenEndPomo)
 			})
+
+			// clear interval update curren count
+			clearInterval(currenSecondCouting)
+			console.log("done");
 		}, timePomo)
+
+		// start update counter in storage
+		updateCurrenTimeCouting(timePomo)
 	})
 }
 //start rest
@@ -27,8 +35,29 @@ function startRest(){
 				openNotificationAndNewtab(false, store.openNewTabWhenEndRest, store.openNotifiWhenEndRest)
 			})
 			
+			// clear interval update curren count
+			clearInterval(currenSecondCouting)
+			console.log("done");
 		}, timeRest)
+
+		// start update counter in storage
+		updateCurrenTimeCouting(timeRest)
 	})
+}
+
+//update curren time to storage
+function updateCurrenTimeCouting(totalSecond){
+	let count = 0;
+	currenSecondCouting	= setInterval(function(){
+		// update to storage
+		count+=1000;
+		if(count>=totalSecond){
+			clearInterval(currenSecondCouting)
+		}else{
+			console.log(count);
+			chrome.storage.local.set({"currenSecondCouting": count})			
+		}
+	}, 1000)
 }
 
 // app open new tab and notification function

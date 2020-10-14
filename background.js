@@ -16,8 +16,8 @@ function startCount(){
 			})
 
 			// clear interval update curren count
-			clearInterval(currenSecondCouting)
-			console.log("done");
+			setTimePomodoro = null
+			console.log("done pomo");
 		}, timePomo)
 
 		// start update counter in storage
@@ -28,16 +28,17 @@ function startCount(){
 function startRest(){
 	chrome.storage.local.get(["timeRest"], function(store){
 		let timeRest = parseFloat(store.timeRest)*60000; // get time to count
+		console.log(timeRest);
 		// start count
-		setTimePomodoro	= setTimeout(function(){
+		setTimeRest	= setTimeout(function(){
 			// open pomodoro tab/notification when done rest
 			chrome.storage.local.get(["openNewTabWhenEndRest", "openNotifiWhenEndRest"], function(store){
 				openNotificationAndNewtab(false, store.openNewTabWhenEndRest, store.openNotifiWhenEndRest)
 			})
 			
 			// clear interval update curren count
-			clearInterval(currenSecondCouting)
-			console.log("done");
+			setTimeRest = null
+			console.log("done rest");
 		}, timeRest)
 
 		// start update counter in storage
@@ -129,5 +130,11 @@ chrome.runtime.onMessage.addListener(function(req, sender, res) {
 	// start counting pomodoro
 	if(req.do == "start counting"){
 		startCount()
+	}
+})
+chrome.runtime.onMessage.addListener(function(req, sender, res) {
+	// start counting pomodoro
+	if(req.do == "start resting"){
+		startRest()
 	}
 })
